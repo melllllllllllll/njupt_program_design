@@ -88,9 +88,9 @@ void cal_pay()
     double cost;
 
     is_cal = 1;
-    fp_hd = fopen("hd.dat", "r");
-    fp_fl = fopen("fl.dat", "r");
-    fp_fy = fopen("fy.dat", "w");
+    fp_hd = fopen("hd", "r");
+    fp_fl = fopen("fl", "r");
+    fp_fy = fopen("fy", "w");
     if(fp_hd == NULL || fp_fy == NULL || fp_fl == NULL)
     {
         fprintf(stderr, "oops!!!\n");
@@ -122,7 +122,9 @@ void cal_pay()
         now = now -> next;
     }
 
+    fprintf(stdout, ">>>>>>Here is communication list\n");
     fprintf(fp_fy, "%-20s%-20s%-20s\n", "caller", "call type", "cost");
+    fprintf(stdout, "%-20s%-20s%-20s\n", "caller", "call type", "cost");
     while(fscanf(fp_hd, "%s%s%s%s%d", hd_from_location, hd_from_phone, hd_to_location, hd_to_phone, &hd_sec) != EOF)
     {
         now = fl_list;
@@ -148,8 +150,10 @@ void cal_pay()
             }
         }
         fprintf(fp_fy, "%-20s%-20s%-20.2f\n", hd_from_phone, long_distance ? "long-distance" : "short-distance", cost);
+        fprintf(stdout, "%-20s%-20s%-20.2f\n", hd_from_phone, long_distance ? "long-distance" : "short-distance", cost);
         long_distance = 0;
     }
+    fprintf(stdout, "-------------------------------------------------------\n");
 
     now = fl_list;
     do {
@@ -191,8 +195,8 @@ void pay_query()
         cal_pay();
     }
 
-    fp_fy = fopen("fy.dat", "r");
-    fp_yh = fopen("yh.dat", "r");
+    fp_fy = fopen("fy", "r");
+    fp_yh = fopen("yh", "r");
     if(fp_fy == NULL || fp_yh == NULL )
     {
         fprintf(stderr, "oops!!!\n");
@@ -248,8 +252,8 @@ void record_query()
     char yh_phone[PHONE_LEN_MAX];
     char yh_name[USER_NAME_LEN_MAX];
 
-    FILE *fp_hd = fopen("hd.dat", "r");
-    FILE *fp_yh = fopen("yh.dat", "r");
+    FILE *fp_hd = fopen("hd", "r");
+    FILE *fp_yh = fopen("yh", "r");
     if(fp_hd == NULL || fp_yh == NULL )
     {
         fprintf(stderr, "oops!!!\n");
