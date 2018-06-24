@@ -273,11 +273,35 @@ void record_query()
         return;
     }
     fprintf(stdout, ">>>>>>User %s\'s record list\n", yh_name);
-    fprintf(stdout, "%-20s%-20s%-20s\n", "from_phone", "to_phone", "last time(second)");
+    fprintf(stdout, "%-20s%-20s%-20s%-20s%-20s\n", "caller", "from_phone", "callee", "to_phone", "last time(second)");
     while(fscanf(fp_hd, "%*s%s%*s%s%d", hd_from_phone, hd_to_phone, &hd_sec) != EOF)
     {
         if(strcmp(phone, hd_from_phone) == 0 || strcmp(phone, hd_to_phone) == 0)
-            fprintf(stdout, "%-20s%-20s%-20d\n", hd_from_phone, hd_to_phone, hd_sec);
+        {
+            char caller[USER_NAME_LEN_MAX];
+            char callee[USER_NAME_LEN_MAX];
+            fseek(fp_yh, 0L, SEEK_SET);
+            while(fscanf(fp_yh, "%s%s", yh_phone, caller) != EOF)
+            {
+                if(strcmp(hd_from_phone, yh_phone) == 0)
+                    break;
+            }
+            if(strcmp(hd_from_phone, yh_phone))
+            {
+                strcpy(caller, "not found");
+            }
+            fseek(fp_yh, 0L, SEEK_SET);
+            while(fscanf(fp_yh, "%s%s", yh_phone, callee) != EOF)
+            {
+                if(strcmp(hd_to_phone, yh_phone) == 0)
+                    break;
+            }
+            if(strcmp(hd_to_phone, yh_phone))
+            {
+                strcpy(callee, "not found");
+            }
+            fprintf(stdout, "%-20s%-20s%-20s%-20s%-20d\n", caller, hd_from_phone, callee, hd_to_phone, hd_sec);
+        }
     }
     fprintf(stdout, "-------------------------------------------------------\n");
     fclose(fp_hd);
